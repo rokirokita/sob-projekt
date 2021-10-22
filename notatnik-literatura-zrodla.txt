@@ -1,0 +1,2 @@
+https://en.wikipedia.org/wiki/Paxos_(computer_science)
+https://www.microsoft.com/en-us/research/uploads/prod/2016/12/paxos-simple-Copy.pdf
