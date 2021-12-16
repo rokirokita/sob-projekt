@@ -31,4 +31,8 @@ public class Connection {
             e.printStackTrace();
         }
     }
+
+    public int getPort() {
+        return socket.getLocalPort();
+    }
 }

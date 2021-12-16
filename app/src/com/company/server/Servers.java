@@ -11,9 +11,11 @@ public class Servers {
         this.servers = Arrays.asList(servers);
     }
 
-    public void sendPrepareMessage() {
+    public void sendPrepareMessage(Long value) {
         for (Server server: servers) {
-            server.sendPrepareMessage();
+            if(server.isLeader()) {
+                server.sendPrepareMessage(value);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
 
 public class PacketReceiver extends Thread {
 
@@ -26,15 +27,6 @@ public class PacketReceiver extends Thread {
                     throw new IOException("message too big " + receivePacket.getLength());
                 }
                 queue.put(receivePacket.getData().clone());
-//                Logger.getLogger("PacketReceiver").info("===MSG==="
-//                        + "\nSOCK L PORT:" + socket.getLocalPort()
-//                        + "\nSOCK PORT:" + socket.getPort()
-//                        + "\nSOCKET IP:" + receivePacket.getSocketAddress().toString()
-//                        + "\nIP:" + receivePacket.getAddress().toString()
-//                        + "\nPORT:" + receivePacket.getPort()
-//                        + "\nDATA:" + new String(receivePacket.getData())
-//                        + "\nLENGTH:" + receivePacket.getLength()
-//                        + "\n===END MSG===");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
