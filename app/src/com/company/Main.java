@@ -8,19 +8,20 @@ import com.company.server.dispatchers.LogDispatcher;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
         try {
-            List<Connection> connections = new ArrayList<Connection>();
+            List<Server> connections = new ArrayList<Server>();
             Servers servers = new Servers(
                     new Server(4440, connections, true),
                     new Server(4441, connections),
                     new Server(4442, connections),
                     new Server(4443, connections)
             );
-            servers.sendPrepareMessage();
+            servers.sendPrepareMessage((new Random()).nextLong());
         } catch (SocketException e) {
             e.printStackTrace();
         }
