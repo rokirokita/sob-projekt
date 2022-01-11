@@ -21,7 +21,7 @@ public class Main {
                     new Server(4442, connections),
                     new Server(4443, connections)
             );
-            servers.sendPrepareMessage((new Random()).nextLong());
+            servers.sendPrepareMessage(2L);
         } catch (SocketException e) {
             e.printStackTrace();
         }

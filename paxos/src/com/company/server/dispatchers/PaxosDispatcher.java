@@ -3,6 +3,8 @@ package com.company.server.dispatchers;
 import com.company.messages.*;
 import com.company.server.Server;
 
+import java.util.logging.Logger;
+
 public class PaxosDispatcher implements Dispatcher {
 
     private Server server;

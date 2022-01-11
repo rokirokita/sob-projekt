@@ -2,11 +2,11 @@ package com.company.messages;
 
 import java.io.Serializable;
 
-public class Accepted implements Message, Serializable {
+public class Accept implements Message, Serializable {
     private Long id;
     private Long value;
 
-    public Accepted(Long id, Long value) {
+    public Accept(Long id, Long value) {
         this.id = id;
         this.value = value;
     }

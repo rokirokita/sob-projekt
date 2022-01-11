@@ -7,6 +7,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Server {
 
@@ -91,13 +92,14 @@ public class Server {
 
     private void sendAcceptMessage(Long sentId) {
         List<Long> raValues = this.receivedPromiseValues.get(sentId);
-        if (raValues.size() > (long) ((this.pools.size()-1) / 2)) {
+        if (raValues.size() > (long) ((this.pools.size()) / 2)) {
             Long value = currentValue;
             for(Long raValue: raValues) {
                 if(raValue != null && value < raValue){
                     value = raValue;
                 }
             }
+            currentValue = value;
             for (Server server : this.pools) {
                 if (server.equals(this)) {
                     continue;
@@ -108,7 +110,7 @@ public class Server {
     }
 
     public void trySendAcceptedMessage(Long sentId, Long sentValue) {
-        if(!sentId.equals(this.currentId)) {
+        if(sentId.equals(this.currentId)) {
             for (Server server : this.pools) {
                 if (server.equals(this) || !server.isLeader()) {
                     continue;
@@ -127,4 +129,11 @@ public class Server {
         return this.leader;
     }
 
+    public Long getCurrentId() {
+        return currentId;
+    }
+
+    public Long getCurrentValue() {
+        return currentValue;
+    }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1920.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.Controller">
+   <children>
+      <Button fx:id="sendToVotingButton" layoutX="604.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#sendToVoting" text="Wyślij wiadomość" />
+      <TextField fx:id="votingValueField" layoutX="540.0" layoutY="14.0" prefHeight="25.0" prefWidth="55.0" />
+      <ListView fx:id="serverList" layoutX="14.0" layoutY="14.0" minWidth="450.0" prefHeight="692.0" prefWidth="450.0" />
+   </children>
+</Pane>
