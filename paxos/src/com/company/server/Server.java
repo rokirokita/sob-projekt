@@ -4,10 +4,7 @@ import com.company.messages.*;
 import com.company.server.dispatchers.MultiDispatcher;
 
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
 
 public class Server {
 
@@ -15,7 +12,12 @@ public class Server {
     private List<Server> pools;
     private boolean leader;
     private Long currentId = Long.valueOf(0);
+    private Long backupCurrentId;
     private Long currentValue;
+
+    private boolean isShutdown = false;
+    private boolean isCrazyAcceptor = false;
+    private Timer timer;
 
     private HashMap<Long, List<Long>> receivedPromiseValues = new HashMap<>();
 
@@ -30,6 +32,9 @@ public class Server {
     }
 
     public void sendPrepareMessage(Long currentValue) {
+        if(this.isShutdown()) {
+            return;
+        }
         if(!this.leader){
             return;
         }
@@ -45,6 +50,9 @@ public class Server {
     }
 
     public void trySendPromiseMessage(Long sentId) {
+        if(this.isShutdown()) {
+            return;
+        }
         if(this.currentId == null || sentId > this.currentId) {
             for (Server server: this.pools) {
                 if (server.equals(this) || !server.isLeader()) {
@@ -61,6 +69,9 @@ public class Server {
     }
 
     public void trySendAcceptMessage(Long sentId) {
+        if(this.isShutdown()) {
+            return;
+        }
         if(!this.leader || !sentId.equals(this.currentId)){
             return;
         }
@@ -76,6 +87,9 @@ public class Server {
     }
 
     public void trySendAcceptMessage(Long sentId, Long value) {
+        if(this.isShutdown()) {
+            return;
+        }
         if(!this.leader || !sentId.equals(this.currentId)){
             return;
         }
@@ -91,6 +105,9 @@ public class Server {
     }
 
     private void sendAcceptMessage(Long sentId) {
+        if(this.isShutdown()) {
+            return;
+        }
         List<Long> raValues = this.receivedPromiseValues.get(sentId);
         if (raValues.size() > (long) ((this.pools.size()) / 2)) {
             Long value = currentValue;
@@ -110,6 +127,9 @@ public class Server {
     }
 
     public void trySendAcceptedMessage(Long sentId, Long sentValue) {
+        if(this.isShutdown()) {
+            return;
+        }
         if(sentId.equals(this.currentId)) {
             for (Server server : this.pools) {
                 if (server.equals(this) || !server.isLeader()) {
@@ -135,5 +155,38 @@ public class Server {
 
     public Long getCurrentValue() {
         return currentValue;
+    }
+
+    public boolean isShutdown() {
+        return isShutdown;
+    }
+
+    public void setShutdown(boolean shutdown) {
+        isShutdown = shutdown;
+    }
+
+    public boolean isCrazyAcceptor() {
+        return isCrazyAcceptor;
+    }
+
+    public void setCrazyAcceptor(boolean crazyAcceptor) {
+        if (crazyAcceptor) {
+            this.backupCurrentId = this.currentId;
+            this.timer = new Timer();
+            this.timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Long generated = new Random().nextLong();
+                    if(generated < 0) {
+                        generated *= -1;
+                    }
+                    currentId = generated;
+                }
+            }, 0, 1000);
+        }else {
+            this.timer.cancel();
+            this.currentId = this.backupCurrentId;
+        }
+        isCrazyAcceptor = crazyAcceptor;
     }
 }

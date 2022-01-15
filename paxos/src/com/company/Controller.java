@@ -49,7 +49,6 @@ public class Controller implements Initializable {
     }
 
     public void sendToVoting(MouseEvent mouseEvent) {
-        Logger.getLogger("Controller").info(votingValueField.getText());
         servers.sendPrepareMessage(Long.valueOf(votingValueField.getText()));
     }
 
