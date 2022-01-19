@@ -25,12 +25,18 @@ public class PaxosDispatcher implements Dispatcher {
                 server.trySendPromiseMessage(((Prepare) message).getId());
             } else if (message instanceof Promise) {
                 if(((Promise) message).hasAcceptedValue()) {
-                    server.trySendAcceptMessage(((Promise) message).getId(), ((Promise) message).getAcceptedValue());
+                    server.trySendAcceptMessage(
+                            ((Promise) message).getId(),
+                            ((Promise) message).getAcceptedValue()
+                    );
                 } else {
                     server.trySendAcceptMessage(((Promise) message).getId());
                 }
             } else if (message instanceof Accept) {
-                server.trySendAcceptedMessage(((Accept) message).getId(), ((Accept) message).getValue());
+                server.trySendAcceptedMessage(
+                        ((Accept) message).getId(),
+                        ((Accept) message).getValue()
+                );
             }
         }
     }

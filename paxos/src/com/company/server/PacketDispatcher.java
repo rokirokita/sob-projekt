@@ -11,7 +11,11 @@ public class PacketDispatcher extends Thread {
     private BlockingQueue<byte[]> queue;
     private Dispatcher dispatcher;
 
-    public PacketDispatcher(DatagramSocket socket, BlockingQueue<byte[]> queue, Dispatcher dispatcher) {
+    public PacketDispatcher(
+            DatagramSocket socket,
+            BlockingQueue<byte[]> queue,
+            Dispatcher dispatcher
+    ) {
         this.socket = socket;
         this.queue = queue;
         this.dispatcher = dispatcher;

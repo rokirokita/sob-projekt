@@ -15,13 +15,10 @@ public class Server {
     private Long currentId = Long.valueOf(0);
     private Long backupCurrentId;
     private Long currentValue;
-
     private boolean isShutdown = false;
     private boolean isCrazyAcceptor = false;
     private boolean hasConnectionProblem = false;
-
     private Timer timer;
-
     private HashMap<Long, List<Long>> receivedPromiseValues = new HashMap<>();
 
     public Server(int port, List<Server> pools) throws SocketException {
@@ -33,7 +30,6 @@ public class Server {
         connection = new Connection(port, new MultiDispatcher(this));
         this.pools.add(this);
     }
-
     public void sendPrepareMessage(Long currentValue) {
         if(this.isShutdown()) {
             return;
@@ -48,7 +44,10 @@ public class Server {
                 continue;
             }
             this.receivedPromiseValues.put(this.currentId, new ArrayList<>());
-            this.connection.sendTo(server.getConnection(), MessageSerializator.serialize(new Prepare(this.currentId)));
+            this.connection.sendTo(
+                    server.getConnection(),
+                    MessageSerializator.serialize(new Prepare(this.currentId))
+            );
         }
     }
 
@@ -62,9 +61,15 @@ public class Server {
                     continue;
                 }
                 if(this.currentValue != null) {
-                    this.connection.sendTo(server.getConnection(), MessageSerializator.serialize(new Promise(sentId, this.currentId, this.currentValue)));
+                    this.connection.sendTo(
+                            server.getConnection(),
+                            MessageSerializator.serialize(new Promise(sentId, this.currentId, this.currentValue))
+                    );
                 } else {
-                    this.connection.sendTo(server.getConnection(), MessageSerializator.serialize(new Promise(sentId)));
+                    this.connection.sendTo(
+                            server.getConnection(),
+                            MessageSerializator.serialize(new Promise(sentId))
+                    );
                 }
             }
             this.currentId = sentId;
@@ -130,7 +135,10 @@ public class Server {
                 if (server.equals(this)) {
                     continue;
                 }
-                this.connection.sendTo(server.getConnection(), MessageSerializator.serialize(new Accept(sentId, value)));
+                this.connection.sendTo(
+                        server.getConnection(),
+                        MessageSerializator.serialize(new Accept(sentId, value))
+                );
             }
         }
     }
@@ -145,7 +153,10 @@ public class Server {
                     continue;
                 }
                 this.currentValue = sentValue;
-                this.connection.sendTo(server.getConnection(), MessageSerializator.serialize(new Accepted(sentId, sentValue)));
+                this.connection.sendTo(
+                        server.getConnection(),
+                        MessageSerializator.serialize(new Accepted(sentId, sentValue))
+                );
             }
         }
     }
