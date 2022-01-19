@@ -3,6 +3,8 @@ package com.company.server.dispatchers;
 import com.company.messages.*;
 import com.company.server.Server;
 
+import java.util.Random;
+
 public class PaxosDispatcher implements Dispatcher {
 
     private Server server;
@@ -13,6 +15,9 @@ public class PaxosDispatcher implements Dispatcher {
 
     @Override
     public void dispatch(byte[] messageData) {
+        if(server.hasConnectionProblem() && new Random().nextInt()%2 == 0) {
+            return;
+        }
         Object messageObject = MessageSerializator.deserialize(messageData);
         if(messageObject instanceof Message) {
             Message message = (Message) messageObject;

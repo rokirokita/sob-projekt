@@ -5,6 +5,7 @@ import com.company.server.dispatchers.MultiDispatcher;
 
 import java.net.SocketException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Server {
 
@@ -17,6 +18,8 @@ public class Server {
 
     private boolean isShutdown = false;
     private boolean isCrazyAcceptor = false;
+    private boolean hasConnectionProblem = false;
+
     private Timer timer;
 
     private HashMap<Long, List<Long>> receivedPromiseValues = new HashMap<>();
@@ -109,7 +112,13 @@ public class Server {
             return;
         }
         List<Long> raValues = this.receivedPromiseValues.get(sentId);
-        if (raValues.size() > (long) ((this.pools.size()) / 2)) {
+        List<Server> tempPools = new ArrayList<>();
+        for(Server serverItem: this.pools) {
+            if(!serverItem.isShutdown()) {
+                tempPools.add(serverItem);
+            }
+        }
+        if (raValues.size() > (long) ((tempPools.size()-1) / 2)) {
             Long value = currentValue;
             for(Long raValue: raValues) {
                 if(raValue != null && value < raValue){
@@ -167,6 +176,14 @@ public class Server {
 
     public boolean isCrazyAcceptor() {
         return isCrazyAcceptor;
+    }
+
+    public boolean hasConnectionProblem() {
+        return hasConnectionProblem;
+    }
+
+    public void setConnectionProblem(boolean hasConnectionProblem) {
+        this.hasConnectionProblem = hasConnectionProblem;
     }
 
     public void setCrazyAcceptor(boolean crazyAcceptor) {

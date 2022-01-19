@@ -33,6 +33,9 @@ public class ServerListViewCell extends ListCell<Server> {
     private CheckBox isCrazyAcceptor;
 
     @FXML
+    private CheckBox hasConnectionProblem;
+
+    @FXML
     private GridPane gridPane;
 
     FXMLLoader mLLoader;
@@ -74,6 +77,15 @@ public class ServerListViewCell extends ListCell<Server> {
                 isCrazyAcceptor.setSelected(server.isCrazyAcceptor());
                 isCrazyAcceptor.setOnMouseClicked(event -> {
                     server.setCrazyAcceptor(isCrazyAcceptor.isSelected());
+                });
+            }
+
+            if(server.isLeader()) {
+                hasConnectionProblem.setVisible(false);
+            }else {
+                hasConnectionProblem.setSelected(server.hasConnectionProblem());
+                hasConnectionProblem.setOnMouseClicked(event -> {
+                    server.setConnectionProblem(hasConnectionProblem.isSelected());
                 });
             }
 
